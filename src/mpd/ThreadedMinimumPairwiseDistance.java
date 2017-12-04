@@ -2,23 +2,37 @@ package mpd;
 
 public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance {
 	public final int GLOBALRESULT = Integer.MAX_VALUE;
-
-	@Override
-	public int minimumPairwiseDistance(int[] values) {
-
-		lowerLeft thread1 = new lowerLeft();
-		bottomRight thread2 = new bottomRight();
-		topRight thread3 = new topRight();
-		center thread4 = new center();
-
-		throw new UnsupportedOperationException();
-
-	}
+	private int[] values;
 
 	public synchronized void updateGlobalResult(int localResult) {
 		if (localResult < GLOBALRESULT) {
 			localResult = GLOBALRESULT;
 		}
+
+	}
+
+	/*public ThreadedMinimumPairwiseDistance() {
+
+	}
+
+	private ThreadedMinimumPairwiseDistance(int[] values) {
+		this.values = values;
+	}
+*/
+	@Override
+	public int minimumPairwiseDistance(int[] values) {
+
+		Thread lowerLeft = new Thread(new lowerLeft());
+		Thread bottomRight = new Thread(new bottomRight());
+		Thread topRight = new Thread(new topRight());
+		Thread center = new Thread(new center());
+		
+		lowerLeft.start();
+		bottomRight.start();
+		topRight.start();
+		center.start();
+
+		throw new UnsupportedOperationException();
 
 	}
 
