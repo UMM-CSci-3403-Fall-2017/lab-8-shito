@@ -31,12 +31,23 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 		bottomRight.start();
 		topRight.start();
 		center.start();
+		
+		try{
+			lowerLeft.join();
+			bottomRight.join();
+			topRight.join();
+			center.join();
+		} catch(InterruptedException e){
+			System.out.println(e);
+		}
 
-		throw new UnsupportedOperationException();
+		//throw new UnsupportedOperationException();
+		return -1;
 
 	}
 
 	private class lowerLeft implements Runnable {
+		int[] values;
 
 		@Override
 		public void run() {
@@ -52,7 +63,6 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 					}
 				}
 			}
-			return result;
 		}
 
 	}
@@ -73,7 +83,6 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 					}
 				}
 			}
-			return result;
 		}
 
 	}
@@ -94,7 +103,6 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 					}
 				}
 			}
-			return result;
 		}
 
 	}
@@ -115,7 +123,6 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 					}
 				}
 			}
-			return result;
 		}
 
 	}
