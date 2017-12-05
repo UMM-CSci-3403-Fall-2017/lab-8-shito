@@ -1,23 +1,15 @@
 package mpd;
 
 public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance {
-	public final int GLOBALRESULT = Integer.MAX_VALUE;
+	public static int GLOBALRESULT = Integer.MAX_VALUE;
 
 	public synchronized void updateGlobalResult(int localResult) {
 		if (localResult < GLOBALRESULT) {
-			localResult = GLOBALRESULT;
+			GLOBALRESULT = localResult;
 		}
 
 	}
-
-	/*
-	 * public ThreadedMinimumPairwiseDistance() {
-	 * 
-	 * }
-	 * 
-	 * private ThreadedMinimumPairwiseDistance(int[] values) { this.values =
-	 * values; }
-	 */
+	
 	@Override
 	public int minimumPairwiseDistance(int[] values) {
 
@@ -41,7 +33,7 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 		}
 
 		// throw new UnsupportedOperationException();
-		return -1;
+		return GLOBALRESULT;
 
 	}
 
@@ -55,15 +47,12 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			int result = Integer.MAX_VALUE;
 			for (int i = 0; i < values.length / 2; ++i) {
 				for (int j = 0; j < i; ++j) {
 					// Gives us all the pairs (i, j) where 0 ≤ j < i <
 					// values.length
 					int diff = Math.abs(values[i] - values[j]);
-					if (diff < result) {
-						result = diff;
-					}
+					updateGlobalResult(diff);
 				}
 			}
 		}
@@ -80,15 +69,12 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			int result = Integer.MAX_VALUE;
-			for (int i = 0; i < values.length / 2; ++i) {
-				for (int j = 0; j < i; ++j) {
+			for (int i = 0; i < values.length; ++i) {
+				for (int j = values.length/2; j < i; ++j) {
 					// Gives us all the pairs (i, j) where 0 ≤ j < i <
 					// values.length
 					int diff = Math.abs(values[i] - values[j]);
-					if (diff < result) {
-						result = diff;
-					}
+					updateGlobalResult(diff);
 				}
 			}
 		}
@@ -105,15 +91,12 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			int result = Integer.MAX_VALUE;
-			for (int i = 0; i < values.length / 2; ++i) {
+			for (int i = values.length/2; i < values.length; ++i) {
 				for (int j = 0; j < i; ++j) {
 					// Gives us all the pairs (i, j) where 0 ≤ j < i <
 					// values.length
 					int diff = Math.abs(values[i] - values[j]);
-					if (diff < result) {
-						result = diff;
-					}
+					updateGlobalResult(diff);
 				}
 			}
 		}
@@ -130,15 +113,12 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			int result = Integer.MAX_VALUE;
-			for (int i = 0; i < values.length / 2; ++i) {
+			for (int i = values.length; i < values.length / 2; ++i) {
 				for (int j = 0; j < i; ++j) {
 					// Gives us all the pairs (i, j) where 0 ≤ j < i <
 					// values.length
 					int diff = Math.abs(values[i] - values[j]);
-					if (diff < result) {
-						result = diff;
-					}
+					updateGlobalResult(diff);
 				}
 			}
 		}
