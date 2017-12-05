@@ -2,7 +2,6 @@ package mpd;
 
 public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance {
 	public final int GLOBALRESULT = Integer.MAX_VALUE;
-	private int[] values;
 
 	public synchronized void updateGlobalResult(int localResult) {
 		if (localResult < GLOBALRESULT) {
@@ -11,43 +10,47 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 
 	}
 
-	/*public ThreadedMinimumPairwiseDistance() {
-
-	}
-
-	private ThreadedMinimumPairwiseDistance(int[] values) {
-		this.values = values;
-	}
-*/
+	/*
+	 * public ThreadedMinimumPairwiseDistance() {
+	 * 
+	 * }
+	 * 
+	 * private ThreadedMinimumPairwiseDistance(int[] values) { this.values =
+	 * values; }
+	 */
 	@Override
 	public int minimumPairwiseDistance(int[] values) {
 
-		Thread lowerLeft = new Thread(new lowerLeft());
-		Thread bottomRight = new Thread(new bottomRight());
-		Thread topRight = new Thread(new topRight());
-		Thread center = new Thread(new center());
-		
+		Thread lowerLeft = new Thread(new lowerLeft(values));
+		Thread bottomRight = new Thread(new bottomRight(values));
+		Thread topRight = new Thread(new topRight(values));
+		Thread center = new Thread(new center(values));
+
 		lowerLeft.start();
 		bottomRight.start();
 		topRight.start();
 		center.start();
-		
-		try{
+
+		try {
 			lowerLeft.join();
 			bottomRight.join();
 			topRight.join();
 			center.join();
-		} catch(InterruptedException e){
+		} catch (InterruptedException e) {
 			System.out.println(e);
 		}
 
-		//throw new UnsupportedOperationException();
+		// throw new UnsupportedOperationException();
 		return -1;
 
 	}
 
 	private class lowerLeft implements Runnable {
 		int[] values;
+		
+		public lowerLeft(int[] values){
+			this.values = values;
+		}
 
 		@Override
 		public void run() {
@@ -68,6 +71,11 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 	}
 
 	private class bottomRight implements Runnable {
+		int[] values;
+		
+		public bottomRight(int[] values){
+			this.values = values;
+		}
 
 		@Override
 		public void run() {
@@ -88,6 +96,11 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 	}
 
 	private class topRight implements Runnable {
+		int[] values;
+		
+		public topRight(int[] values){
+			this.values = values;
+		}
 
 		@Override
 		public void run() {
@@ -108,6 +121,11 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 	}
 
 	private class center implements Runnable {
+		int[] values;
+		
+		public center(int[] values){
+			this.values = values;
+		}
 
 		@Override
 		public void run() {
