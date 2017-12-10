@@ -1,7 +1,7 @@
 package mpd;
 
 public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance {
-	public static int GLOBALRESULT = Integer.MAX_VALUE;
+	public int GLOBALRESULT = Integer.MAX_VALUE;
 
 	public synchronized void updateGlobalResult(int localResult) {
 		if (localResult < GLOBALRESULT) {
@@ -32,13 +32,13 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 			System.out.println(e);
 		}
 
-		// throw new UnsupportedOperationException();
 		return GLOBALRESULT;
 
 	}
 
 	private class lowerLeft implements Runnable {
 		int[] values;
+		int localresult = Integer.MAX_VALUE;
 		
 		public lowerLeft(int[] values){
 			this.values = values;
@@ -46,21 +46,24 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			for (int i = 0; i < values.length / 2; ++i) {
-				for (int j = 0; j < i; ++j) {
-					// Gives us all the pairs (i, j) where 0 ≤ j < i <
-					// values.length
+			int n = values.length;
+			for (int i = 0; i < n / 2; i++) {
+				for (int j = 0; j < i; j++) {
 					int diff = Math.abs(values[i] - values[j]);
-					updateGlobalResult(diff);
+					if (diff < localresult){
+						localresult = diff;
+					}
 				}
 			}
+			
+			updateGlobalResult(localresult);
 		}
 
 	}
 
 	private class bottomRight implements Runnable {
 		int[] values;
+		int localresult = Integer.MAX_VALUE;
 		
 		public bottomRight(int[] values){
 			this.values = values;
@@ -68,21 +71,24 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			for (int i = 0; i < values.length; ++i) {
-				for (int j = values.length/2; j < i; ++j) {
-					// Gives us all the pairs (i, j) where 0 ≤ j < i <
-					// values.length
+			int n = values.length;
+			for (int i = n / 2; i < n; i++) {
+				for (int j = 0; j < i - (n/2); j++) {
 					int diff = Math.abs(values[i] - values[j]);
-					updateGlobalResult(diff);
+					if (diff < localresult){
+						localresult = diff;
+					}
 				}
 			}
+			
+			updateGlobalResult(localresult);
 		}
 
 	}
 
 	private class topRight implements Runnable {
 		int[] values;
+		int localresult = Integer.MAX_VALUE;
 		
 		public topRight(int[] values){
 			this.values = values;
@@ -90,21 +96,24 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			for (int i = values.length/2; i < values.length; ++i) {
-				for (int j = 0; j < i; ++j) {
-					// Gives us all the pairs (i, j) where 0 ≤ j < i <
-					// values.length
+			int n = values.length;
+			for (int i = n / 2; i < n; i++) {
+				for (int j = n / 2; j < i; j++) {
 					int diff = Math.abs(values[i] - values[j]);
-					updateGlobalResult(diff);
+					if (diff < localresult){
+						localresult = diff;
+					}
 				}
 			}
+			
+			updateGlobalResult(localresult);
 		}
 
 	}
 
 	private class center implements Runnable {
 		int[] values;
+		int localresult = Integer.MAX_VALUE;
 		
 		public center(int[] values){
 			this.values = values;
@@ -112,15 +121,17 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			for (int i = values.length; i < values.length / 2; ++i) {
-				for (int j = 0; j < i; ++j) {
-					// Gives us all the pairs (i, j) where 0 ≤ j < i <
-					// values.length
+			int n = values.length;
+			for (int i = n / 2; i < n ; ++i) {
+				for (int j = i - (n/2); j < n / 2; ++j) {
 					int diff = Math.abs(values[i] - values[j]);
-					updateGlobalResult(diff);
+					if (diff < localresult){
+						localresult = diff;
+					}
 				}
 			}
+			
+			updateGlobalResult(localresult);
 		}
 
 	}
