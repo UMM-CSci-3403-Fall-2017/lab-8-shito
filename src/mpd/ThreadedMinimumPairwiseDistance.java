@@ -2,7 +2,8 @@ package mpd;
 
 public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance {
 	public int GLOBALRESULT = Integer.MAX_VALUE;
-
+	
+	//synchonized method that updates the globalresult
 	public synchronized void updateGlobalResult(int localResult) {
 		if (localResult < GLOBALRESULT) {
 			GLOBALRESULT = localResult;
@@ -35,7 +36,7 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 		return GLOBALRESULT;
 
 	}
-
+	//The following are 4 inner classes that implementes runnable on the specific sections
 	private class lowerLeft implements Runnable {
 		int[] values;
 		int localresult = Integer.MAX_VALUE;
